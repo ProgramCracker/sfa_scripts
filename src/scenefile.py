@@ -42,11 +42,12 @@ class SceneFile(object):
         """Saves the scene file.
 
         Returns:
-            Path: The path to the scene file if successful"""
+            Path: The path to the scene file if successful
+        """
         try:
             return pmc.system.saveAs(self.path)
         except RuntimeError as err:
-            log.warning("Missing directory(file) in path. Creating new"
-                        "directories...")
+            log.warning("Missing directory(folder) in path. Creating "
+                        "new directories...")
             self.folder_path.makedirs_p()
             return pmc.system.saveAs(self.path)
