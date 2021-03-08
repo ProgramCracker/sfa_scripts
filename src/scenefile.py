@@ -13,8 +13,8 @@ class SceneFile(object):
         if not path and scene:
             path = scene
         if not path and not scene:
-            log.warning("Unable to initialise SceneFile object from a"
-                        "new scene. Please specify a path.")
+            log.warning("Unable to initialise SceneFile object from "
+                        "a new scene. Please specify a path.")
             return
         self._init_from_path(path)
 
