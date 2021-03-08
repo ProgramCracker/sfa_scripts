@@ -8,7 +8,14 @@ log = logging.getLogger(__name__)
 
 class SceneFile(object):
     """An abstract representation of a Scene file."""
-    def __init__(self, path):
+    def __init__(self, path=None):
+        scene = pmc.system.sceneName()
+        if not path and scene:
+            path = scene
+        if not path and not scene:
+            log.warning("Unable to initialise SceneFile object from a"
+                        "new scene. Please specify a path.")
+            return
         self._init_from_path(path)
 
     @property
