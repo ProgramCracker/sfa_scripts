@@ -9,6 +9,11 @@ log = logging.getLogger(__name__)
 class SceneFile(object):
     """An abstract representation of a Scene file."""
     def __init__(self, path=None):
+        self.folder_path = Path()
+        self.descriptor = Path()
+        self.task = None
+        self.ver = 1
+        self.ext = '.ma'
         scene = pmc.system.sceneName()
         if not path and scene:
             path = scene
