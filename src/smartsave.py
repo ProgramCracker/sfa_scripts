@@ -27,6 +27,7 @@ class SmartSaveUI(QtWidgets.QDialog):
         self.setWindowFlags(self.windowFlags() ^
                             QtCore.Qt.WindowContextHelpButtonHint)
         self.create_ui()
+        # self.create_connections()
 
     def create_ui(self):
         self.title_lbl = QtWidgets.QLabel("Smart Save")
@@ -94,6 +95,15 @@ class SmartSaveUI(QtWidgets.QDialog):
         layout.addWidget(self.folder_le)
         layout.addWidget(self.folder_browse_btn)
         return layout
+
+    # def create_connections(self):
+    #     """Connect our widget signals to slots"""
+    #     self.cancel_btn.clicked.connect(self.cancel)
+
+    # @QtCore.Slot()
+    # def cancel(self):
+    #     """Quits the dialog"""
+    #     self.close()
 
 
 class SceneFile(object):
