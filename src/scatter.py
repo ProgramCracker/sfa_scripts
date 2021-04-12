@@ -1,9 +1,12 @@
+import logging
+
 from PySide2 import QtWidgets, QtCore
 from shiboken2 import wrapInstance
 import maya.OpenMayaUI as omui
 import maya.cmds as cmds
 import pymel.core as pmc
 
+log = logging.getLogger(__name__)
 
 def maya_main_window():
     """Return the maya main window widget"""
@@ -24,6 +27,7 @@ class ScatterTool(QtWidgets.QDialog):
 
         self.instance = Instancing()
         self.create_ui()
+        self.creating_connections()
 
     def create_ui(self):
         self.title_lbl = QtWidgets.QLabel("Super Scatter Tool 9000")
@@ -46,38 +50,12 @@ class ScatterTool(QtWidgets.QDialog):
 
     def creating_connections(self):
         self.scatter_btn.clicked.connect(self.scatter)
+        cmds.warning("button Active")
 
     @QtCore.Slot()
     def scatter(self):
-        self._set_properties_from_ui()
+        cmds.warning("scatter was pressed")
         self.instance.time_to_instance_on_vertices()
-
-    # def time_to_instance(self):
-    #     for i in self._get_vertices():
-    #         new_instance = cmds.instance(self.select[1])
-    #
-    #         cmds.move(i.x, i.y, i.z, new_instance)
-    #         cmds.rotate(i.x + range(self.r_xmin_r, self.r_xmax_r
-    #                                 ), i.y + range(self.r_ymin_r,
-    #                                                self.r_ymax_r),
-    #                     i.z + range(self.r_zmin_r, self.r_zmax_r
-    #                                 ), new_instance)
-    #         cmds.scale(i.x + range(self.r_xmin_s,
-    #                                self.r_xmax_s), i.y +
-    #                    range(self.r_ymin_s, self.r_ymax_s),
-    #                    i.z + range(self.r_zmin_s,
-    #                                self.r_zmax_s), new_instance)
-
-    # def _get_vertices(self):
-    #     self.target = self.select[0]
-    #     list = cmds.ls(self.target)
-    #     for item in list:
-    #        vertice_num = cmds.polyEvaluate(v=True)
-    #        cmds.select(cl=True)
-    #        cmds.select(item + '.vtx[0:' + str(vertice_num) + ']',
-    #                     add=True)
-    #        vertexnames = cmds.filterExpand(sm=31)
-    #     return vertexnames
 
     def _create_selection_ui(self):
         self.target_header_lbl = QtWidgets.QLabel("Target Object to"
@@ -123,27 +101,27 @@ class ScatterTool(QtWidgets.QDialog):
 
         self.x_min = QtWidgets.QSpinBox()
         self.x_min.setFixedWidth(50)
-        self.x_min.setValue(self.r_xmin_s)
+        self.x_min.setValue(self.instance.r_xmn_s)
 
         self.x_max = QtWidgets.QSpinBox()
         self.x_max.setFixedWidth(50)
-        self.x_max.setValue(self.r_xmax_s)
+        self.x_max.setValue(self.instance.r_xmx_s)
 
         self.y_min = QtWidgets.QSpinBox()
         self.y_min.setFixedWidth(50)
-        self.y_min.setValue(self.r_ymin_s)
+        self.y_min.setValue(self.instance.r_ymn_s)
 
         self.y_max = QtWidgets.QSpinBox()
         self.y_max.setFixedWidth(50)
-        self.y_max.setValue(self.r_ymax_s)
+        self.y_max.setValue(self.instance.r_ymx_s)
 
         self.z_min = QtWidgets.QSpinBox()
         self.z_min.setFixedWidth(50)
-        self.z_min.setValue(self.r_zmin_s)
+        self.z_min.setValue(self.instance.r_zmn_s)
 
         self.z_max = QtWidgets.QSpinBox()
         self.z_max.setFixedWidth(50)
-        self.z_max.setValue(self.r_zmax_s)
+        self.z_max.setValue(self.instance.r_zmx_s)
 
         layout.addWidget(self.scale_header_lbl, 0, 0, 1, -1)
         layout.addWidget(self.min_lin_header, 1, 0)
@@ -182,27 +160,27 @@ class ScatterTool(QtWidgets.QDialog):
 
         self.x_min = QtWidgets.QSpinBox()
         self.x_min.setFixedWidth(50)
-        self.x_min.setValue(self.r_xmin_r)
+        self.x_min.setValue(self.instance.r_xmn_r)
 
         self.x_max = QtWidgets.QSpinBox()
         self.x_max.setFixedWidth(50)
-        self.x_max.setValue(self.r_xmax_r)
+        self.x_max.setValue(self.instance.r_xmx_r)
 
         self.y_min = QtWidgets.QSpinBox()
         self.y_min.setFixedWidth(50)
-        self.y_min.setValue(self.r_ymin_r)
+        self.y_min.setValue(self.instance.r_ymn_r)
 
         self.y_max = QtWidgets.QSpinBox()
         self.y_max.setFixedWidth(50)
-        self.y_max.setValue(self.r_ymax_r)
+        self.y_max.setValue(self.instance.r_ymx_r)
 
         self.z_min = QtWidgets.QSpinBox()
         self.z_min.setFixedWidth(50)
-        self.z_min.setValue(self.r_zmin_r)
+        self.z_min.setValue(self.instance.r_zmn_r)
 
         self.z_max = QtWidgets.QSpinBox()
         self.z_max.setFixedWidth(50)
-        self.z_max.setValue(self.r_zmax_r)
+        self.z_max.setValue(self.instance.r_zmx_r)
 
         layout.addWidget(self.scale_header_lbl, 0, 0, 1, -1)
         layout.addWidget(self.min_lin_header, 1, 0)
@@ -232,12 +210,13 @@ class ScatterTool(QtWidgets.QDialog):
         return layout
 
     def _set_properties_from_ui(self):
-        self.instance.r_xmn_s = self.r_xmin_s
+        self.r_xmin_s = self.instance.r_xmn_s
         self.instance.r_xmx_s = self.r_xmax_s
         self.instance.r_ymn_s = self.r_ymin_s
         self.instance.r_ymn_s = self.r_ymax_s
         self.instance.r_zmn_s = self.r_zmin_s
         self.instance.r_zmx_s = self.r_zmax_s
+
         self.instance.r_xmn_r = self.r_xmin_r
         self.instance.r_xmx_r = self.r_xmax_r
         self.instance.r_ymn_r = self.r_ymin_r
@@ -246,11 +225,9 @@ class ScatterTool(QtWidgets.QDialog):
         self.instance.r_zmx_r = self.r_zmax_r
 
 
-
 class Instancing(object):
 
     def __init__(self):
-        self.scatter = ScatterTool()
 
         self.r_xmn_s = 1
         self.r_xmx_s = 1
@@ -266,16 +243,20 @@ class Instancing(object):
         self.r_zmn_r = 1
         self.r_zmx_r = 1
 
-        self.instance_on = self.scatter.select[0]
-        self.to_be_instanced = self.scatter.select[1]
+        self.selected = cmds.ls(orderedSelection=True)
+
+        self.instance_on = self.selected[0]
+        self.to_be_instanced = self.selected[1]
 
     def time_to_instance_on_vertices(self):
         for vert in self._get_vertices():
             pos = cmds.pointPosition(vert)
             new_instance = cmds.instance(self.to_be_instanced)
             cmds.move(pos[0], pos[1], pos[2], new_instance)
+        return
 
     def _get_vertices(self):
+        cmds.warning("we are getting vertices")
         self.target = self.instance_on
         selected_mesh = cmds.ls(self.target, flatten=True)
         selected_verts = cmds.polyListComponentConversion(selected_mesh,
@@ -283,11 +264,3 @@ class Instancing(object):
         selected_verts = cmds.filterExpand(selected_verts,
                                            selectionMask=31)
         return selected_verts
-        # chosen_mesh = cmds.ls(self.instance_on)
-        # for mesh in chosen_mesh:
-        #     vertice_num = cmds.polyEvaluate(v=True)
-        #     cmds.select(cl=True)
-        #     cmds.select(mesh + '.vtx[0:' + str(vertice_num) + ']',
-        #                 add=True)
-        #     vertexnames = cmds.filterExpand(sm=31)
-        #     return vertexnames
