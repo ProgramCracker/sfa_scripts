@@ -26,12 +26,17 @@ class ScatterTool(QtWidgets.QDialog):
         self.button_lay = self._create_button_ui()
         self.select_lay = self._create_selection_ui()
         self.scale_lay = self._create_randomScale_ui()
+        self.position_lay = self._create_randomPosition_ui()
+        self.chkBox_lay = self._create_checkBox_ui()
 
         self.main_lay = QtWidgets.QGridLayout()
+        self.main_lay.setColumnMinimumWidth(3, 200)
         self.main_lay.addWidget(self.title_lbl, 0, 0)
         self.main_lay.addLayout(self.select_lay, 2, 0)
+        self.main_lay.addLayout(self.chkBox_lay, 3, 0)
         self.main_lay.addLayout(self.scale_lay, 2, 3)
-        self.main_lay.addLayout(self.button_lay, 3, 3)
+        self.main_lay.addLayout(self.position_lay, 3, 3)
+        self.main_lay.addLayout(self.button_lay, 4, 3)
         self.setLayout(self.main_lay)
 
 
@@ -50,7 +55,6 @@ class ScatterTool(QtWidgets.QDialog):
         return layout
 
 
-    #def _create_checkBox_ui(self):
 
 
     def _create_randomScale_ui(self):
@@ -116,7 +120,65 @@ class ScatterTool(QtWidgets.QDialog):
 
 
 
-    #def _create_randomPosition_ui(self):
+    def _create_randomPosition_ui(self):
+        layout = QtWidgets.QGridLayout()
+        self.scale_header_lbl = QtWidgets.QLabel("Pos"
+                                                 " Randomization")
+        self.scale_header_lbl.setStyleSheet("font: 20px")
+        self.min_lin_header = QtWidgets.QLabel("Min")
+        self.max_lin_header = QtWidgets.QLabel("Max")
+        self.x_lbl = QtWidgets.QLabel("x")
+        self.y_lbl = QtWidgets.QLabel("y")
+        self.z_lbl = QtWidgets.QLabel("z")
+        self.x_lbl_2 = QtWidgets.QLabel("x")
+        self.y_lbl_2 = QtWidgets.QLabel("y")
+        self.z_lbl_2 = QtWidgets.QLabel("z")
+
+        self.x_min = QtWidgets.QSpinBox()
+        self.x_min.setFixedWidth(50)
+        self.x_min.setValue(1)
+
+        self.x_max = QtWidgets.QSpinBox()
+        self.x_max.setFixedWidth(50)
+        self.x_max.setValue(1)
+
+        self.y_min = QtWidgets.QSpinBox()
+        self.y_min.setFixedWidth(50)
+        self.y_min.setValue(1)
+
+        self.y_max = QtWidgets.QSpinBox()
+        self.y_max.setFixedWidth(50)
+        self.y_max.setValue(1)
+
+        self.z_min = QtWidgets.QSpinBox()
+        self.z_min.setFixedWidth(50)
+        self.z_min.setValue(1)
+
+        self.z_max = QtWidgets.QSpinBox()
+        self.z_max.setFixedWidth(50)
+        self.z_max.setValue(1)
+
+
+        layout.addWidget(self.scale_header_lbl, 0, 0)
+        layout.addWidget(self.min_lin_header, 1, 0)
+        layout.addWidget(self.max_lin_header, 2, 0)
+
+        layout.addWidget(self.x_min, 1, 1)
+        layout.addWidget(self.x_max, 2, 1)
+        layout.addWidget(self.x_lbl, 1, 2)
+        layout.addWidget(self.x_lbl_2, 2, 2)
+
+        layout.addWidget(self.y_min, 1, 4)
+        layout.addWidget(self.y_max, 2, 4)
+        layout.addWidget(self.y_lbl, 1, 5)
+        layout.addWidget(self.y_lbl_2, 2, 5)
+
+        layout.addWidget(self.z_min, 1, 7)
+        layout.addWidget(self.z_max, 2, 7)
+        layout.addWidget(self.z_lbl, 1, 8)
+        layout.addWidget(self.z_lbl_2, 2, 8)
+
+        return layout
 
     def _create_button_ui(self):
         self.save_btn = QtWidgets.QPushButton("Scatter")
