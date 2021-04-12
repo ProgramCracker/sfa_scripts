@@ -23,6 +23,15 @@ class ScatterTool(QtWidgets.QDialog):
     def create_UI(self):
         self.title_lbl = QtWidgets.QLabel("Super Scatter Tool 9000")
         self.title_lbl.setStyleSheet("font: bold 20px")
+        self.button_lay = self._create_button_ui()
         self.main_lay = QtWidgets.QVBoxLayout()
         self.main_lay.addWidget(self.title_lbl)
+        self.main_lay.addStretch()
+        self.main_lay.addLayout(self.button_lay)
         self.setLayout(self.main_lay)
+
+    def _create_button_ui(self):
+        self.save_btn = QtWidgets.QPushButton("Scatter")
+        layout = QtWidgets.QHBoxLayout()
+        layout.addWidget(self.save_btn)
+        return layout
