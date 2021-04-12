@@ -13,8 +13,16 @@ class ScatterTool(QtWidgets.QDialog):
 
     def __init__(self):
         super(ScatterTool, self).__init__(parent=maya_main_window())
-        self.setWindowTitle("Smart Save")
+        self.setWindowTitle("Scatter Tool")
         self.setMinimumWidth(500)
-        self.setMaximumHeight(200)
+        self.setMaximumHeight(400)
         self.setWindowFlags(self.windowFlags() ^
                             QtCore.Qt.WindowContextHelpButtonHint)
+        self.create_UI()
+
+    def create_UI(self):
+        self.title_lbl = QtWidgets.QLabel("Super Scatter Tool 9000")
+        self.title_lbl.setStyleSheet("font: bold 20px")
+        self.main_lay = QtWidgets.QVBoxLayout()
+        self.main_lay.addWidget(self.title_lbl)
+        self.setLayout(self.main_lay)
