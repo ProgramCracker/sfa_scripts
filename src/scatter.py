@@ -135,7 +135,7 @@ class ScatterTool(QtWidgets.QDialog):
 
     def _create_randomPosition_ui(self):
         layout = QtWidgets.QGridLayout()
-        self.scale_header_lbl = QtWidgets.QLabel("Pos"
+        self.scale_header_lbl = QtWidgets.QLabel("Rotate"
                                                  " Randomization")
         self.scale_header_lbl.setStyleSheet("font: 20px")
         self.min_lin_header = QtWidgets.QLabel("Min")
