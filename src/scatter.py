@@ -99,46 +99,46 @@ class ScatterTool(QtWidgets.QDialog):
         self.y_lbl_2 = QtWidgets.QLabel("y")
         self.z_lbl_2 = QtWidgets.QLabel("z")
 
-        self.x_min = QtWidgets.QSpinBox()
-        self.x_min.setFixedWidth(50)
-        self.x_min.setValue(self.instance.r_xmn_s)
+        self.x_min_s = QtWidgets.QSpinBox()
+        self.x_min_s.setFixedWidth(50)
+        self.x_min_s.setValue(self.instance.r_xmn_s)
 
-        self.x_max = QtWidgets.QSpinBox()
-        self.x_max.setFixedWidth(50)
-        self.x_max.setValue(self.instance.r_xmx_s)
+        self.x_max_s = QtWidgets.QSpinBox()
+        self.x_max_s.setFixedWidth(50)
+        self.x_max_s.setValue(self.instance.r_xmx_s)
 
-        self.y_min = QtWidgets.QSpinBox()
-        self.y_min.setFixedWidth(50)
-        self.y_min.setValue(self.instance.r_ymn_s)
+        self.y_min_s = QtWidgets.QSpinBox()
+        self.y_min_s.setFixedWidth(50)
+        self.y_min_s.setValue(self.instance.r_ymn_s)
 
-        self.y_max = QtWidgets.QSpinBox()
-        self.y_max.setFixedWidth(50)
-        self.y_max.setValue(self.instance.r_ymx_s)
+        self.y_max_s = QtWidgets.QSpinBox()
+        self.y_max_s.setFixedWidth(50)
+        self.y_max_s.setValue(self.instance.r_ymx_s)
 
-        self.z_min = QtWidgets.QSpinBox()
-        self.z_min.setFixedWidth(50)
-        self.z_min.setValue(self.instance.r_zmn_s)
+        self.z_min_s = QtWidgets.QSpinBox()
+        self.z_min_s.setFixedWidth(50)
+        self.z_min_s.setValue(self.instance.r_zmn_s)
 
-        self.z_max = QtWidgets.QSpinBox()
-        self.z_max.setFixedWidth(50)
-        self.z_max.setValue(self.instance.r_zmx_s)
+        self.z_max_s = QtWidgets.QSpinBox()
+        self.z_max_s.setFixedWidth(50)
+        self.z_max_s.setValue(self.instance.r_zmx_s)
 
         layout.addWidget(self.scale_header_lbl, 0, 0, 1, -1)
         layout.addWidget(self.min_lin_header, 1, 0)
         layout.addWidget(self.max_lin_header, 2, 0)
 
-        layout.addWidget(self.x_min, 1, 1)
-        layout.addWidget(self.x_max, 2, 1)
+        layout.addWidget(self.x_min_s, 1, 1)
+        layout.addWidget(self.x_max_s, 2, 1)
         layout.addWidget(self.x_lbl, 1, 2)
         layout.addWidget(self.x_lbl_2, 2, 2)
 
-        layout.addWidget(self.y_min, 1, 4)
-        layout.addWidget(self.y_max, 2, 4)
+        layout.addWidget(self.y_min_s, 1, 4)
+        layout.addWidget(self.y_max_s, 2, 4)
         layout.addWidget(self.y_lbl, 1, 5)
         layout.addWidget(self.y_lbl_2, 2, 5)
 
-        layout.addWidget(self.z_min, 1, 7)
-        layout.addWidget(self.z_max, 2, 7)
+        layout.addWidget(self.z_min_s, 1, 7)
+        layout.addWidget(self.z_max_s, 2, 7)
         layout.addWidget(self.z_lbl, 1, 8)
         layout.addWidget(self.z_lbl_2, 2, 8)
 
@@ -158,46 +158,46 @@ class ScatterTool(QtWidgets.QDialog):
         self.y_lbl_2 = QtWidgets.QLabel("y")
         self.z_lbl_2 = QtWidgets.QLabel("z")
 
-        self.x_min = QtWidgets.QSpinBox()
-        self.x_min.setFixedWidth(50)
-        self.x_min.setValue(self.instance.r_xmn_r)
+        self.x_min_r = QtWidgets.QSpinBox()
+        self.x_min_r.setFixedWidth(50)
+        self.x_min_r.setValue(self.instance.r_xmn_r)
 
-        self.x_max = QtWidgets.QSpinBox()
-        self.x_max.setFixedWidth(50)
-        self.x_max.setValue(self.instance.r_xmx_r)
+        self.x_max_r = QtWidgets.QSpinBox()
+        self.x_max_r.setFixedWidth(50)
+        self.x_max_r.setValue(self.instance.r_xmx_r)
 
-        self.y_min = QtWidgets.QSpinBox()
-        self.y_min.setFixedWidth(50)
-        self.y_min.setValue(self.instance.r_ymn_r)
+        self.y_min_r = QtWidgets.QSpinBox()
+        self.y_min_r.setFixedWidth(50)
+        self.y_min_r.setValue(self.instance.r_ymn_r)
 
-        self.y_max = QtWidgets.QSpinBox()
-        self.y_max.setFixedWidth(50)
-        self.y_max.setValue(self.instance.r_ymx_r)
+        self.y_max_r = QtWidgets.QSpinBox()
+        self.y_max_r.setFixedWidth(50)
+        self.y_max_r.setValue(self.instance.r_ymx_r)
 
-        self.z_min = QtWidgets.QSpinBox()
-        self.z_min.setFixedWidth(50)
-        self.z_min.setValue(self.instance.r_zmn_r)
+        self.z_min_r = QtWidgets.QSpinBox()
+        self.z_min_r.setFixedWidth(50)
+        self.z_min_r.setValue(self.instance.r_zmn_r)
 
-        self.z_max = QtWidgets.QSpinBox()
-        self.z_max.setFixedWidth(50)
-        self.z_max.setValue(self.instance.r_zmx_r)
+        self.z_max_r = QtWidgets.QSpinBox()
+        self.z_max_r.setFixedWidth(50)
+        self.z_max_r.setValue(self.instance.r_zmx_r)
 
         layout.addWidget(self.scale_header_lbl, 0, 0, 1, -1)
         layout.addWidget(self.min_lin_header, 1, 0)
         layout.addWidget(self.max_lin_header, 2, 0)
 
-        layout.addWidget(self.x_min, 1, 1)
-        layout.addWidget(self.x_max, 2, 1)
+        layout.addWidget(self.x_min_r, 1, 1)
+        layout.addWidget(self.x_max_r, 2, 1)
         layout.addWidget(self.x_lbl, 1, 2)
         layout.addWidget(self.x_lbl_2, 2, 2)
 
-        layout.addWidget(self.y_min, 1, 4)
-        layout.addWidget(self.y_max, 2, 4)
+        layout.addWidget(self.y_min_r, 1, 4)
+        layout.addWidget(self.y_max_r, 2, 4)
         layout.addWidget(self.y_lbl, 1, 5)
         layout.addWidget(self.y_lbl_2, 2, 5)
 
-        layout.addWidget(self.z_min, 1, 7)
-        layout.addWidget(self.z_max, 2, 7)
+        layout.addWidget(self.z_min_r, 1, 7)
+        layout.addWidget(self.z_max_r, 2, 7)
         layout.addWidget(self.z_lbl, 1, 8)
         layout.addWidget(self.z_lbl_2, 2, 8)
 
@@ -210,19 +210,19 @@ class ScatterTool(QtWidgets.QDialog):
         return layout
 
     def _set_properties_from_ui(self):
-        self.r_xmin_s = self.instance.r_xmn_s
-        self.instance.r_xmx_s = self.r_xmax_s
-        self.instance.r_ymn_s = self.r_ymin_s
-        self.instance.r_ymn_s = self.r_ymax_s
-        self.instance.r_zmn_s = self.r_zmin_s
-        self.instance.r_zmx_s = self.r_zmax_s
+        self.instance.r_xmn_s = self.x_min_s
+        self.instance.r_xmx_s = self.x_max_s
+        self.instance.r_ymn_s = self.y_min_s
+        self.instance.r_ymn_s = self.y_max_s
+        self.instance.r_zmn_s = self.z_min_s
+        self.instance.r_zmx_s = self.z_min_s
 
-        self.instance.r_xmn_r = self.r_xmin_r
-        self.instance.r_xmx_r = self.r_xmax_r
-        self.instance.r_ymn_r = self.r_ymin_r
-        self.instance.r_ymx_r = self.r_ymax_r
-        self.instance.r_zmn_r = self.r_zmin_r
-        self.instance.r_zmx_r = self.r_zmax_r
+        self.instance.r_xmn_r = self.x_min_r
+        self.instance.r_xmx_r = self.x_max_r
+        self.instance.r_ymn_r = self.y_min_r
+        self.instance.r_ymx_r = self.y_max_r
+        self.instance.r_zmn_r = self.z_min_r
+        self.instance.r_zmx_r = self.z_max_r
 
 
 class Instancing(object):
@@ -253,6 +253,12 @@ class Instancing(object):
             pos = cmds.pointPosition(vert)
             new_instance = cmds.instance(self.to_be_instanced)
             cmds.move(pos[0], pos[1], pos[2], new_instance)
+            cmds.scale(range(self.r_xmn_s, self.r_xmx_s),
+                       range(self.r_ymn_s, self.r_ymx_s),
+                       range(self.r_zmn_s, self.r_zmx_s), new_instance)
+            cmds.rotate(range(self.r_xmn_r, self.r_xmx_r),
+                        range(self.r_ymn_r, self.r_ymx_r),
+                        range(self.r_zmn_r , self.r_zmx_r), new_instance)
         return
 
     def _get_vertices(self):
