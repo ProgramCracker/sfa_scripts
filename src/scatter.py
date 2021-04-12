@@ -105,21 +105,19 @@ class ScatterTool(QtWidgets.QDialog):
     def time_to_instance(self):
         for i in self._get_vertices():
             new_instance = cmds.instance(self.select[1])
-            # position = cmds.setAttr('self.new_instance.translateX')
 
             cmds.move(i.x, i.y, i.z, new_instance)
 
-    def _get_vertices(self):
-        self.target = self.select[0]
-        list = cmds.ls(self.select[0])
-        for item in list:
-            vertice_num = cmds.polyEvaluate(v=True)
-            cmds.select(cl=True)
-            cmds.select(item + '.vtx[0:' + str(vertice_num) + ']',
-                        add=True)
-            vertexnames = cmds.filterExpand(sm=31)
-            return vertexnames
-
+    # def _get_vertices(self):
+        # self.target = self.select[0]
+        # list = cmds.ls(self.select[0])
+        # for item in list:
+           # vertice_num = cmds.polyEvaluate(v=True)
+           # cmds.select(cl=True)
+           # cmds.select(item + '.vtx[0:' + str(vertice_num) + ']',
+                        #add=True)
+           # vertexnames = cmds.filterExpand(sm=31)
+            #return vertexnames
 
     def _create_selection_ui(self):
         self.target_header_lbl = QtWidgets.QLabel("Target Object to"
