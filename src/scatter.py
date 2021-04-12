@@ -55,6 +55,19 @@ class ScatterTool(QtWidgets.QDialog):
         return layout
 
 
+    def _create_checkBox_ui(self):
+        self.group_header_lbl = QtWidgets.QLabel("Instances will appear"
+                                                 " on?")
+        self.group_header_lbl.setStyleSheet("font: 20px")
+        self.vertex_chkBox = QtWidgets.QCheckBox("Vertices")
+        self.face_chkBox = QtWidgets.QCheckBox("Faces")
+
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(self.group_header_lbl)
+        layout.addWidget(self.vertex_chkBox)
+        layout.addWidget(self.face_chkBox)
+
+        return layout
 
 
     def _create_randomScale_ui(self):
