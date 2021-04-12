@@ -1,4 +1,5 @@
 import logging
+import random
 
 from PySide2 import QtWidgets, QtCore
 from shiboken2 import wrapInstance
@@ -54,6 +55,7 @@ class ScatterTool(QtWidgets.QDialog):
 
     @QtCore.Slot()
     def scatter(self):
+        self._set_properties_from_ui()
         cmds.warning("scatter was pressed")
         self.instance.time_to_instance_on_vertices()
 
@@ -210,19 +212,19 @@ class ScatterTool(QtWidgets.QDialog):
         return layout
 
     def _set_properties_from_ui(self):
-        self.instance.r_xmn_s = self.x_min_s
-        self.instance.r_xmx_s = self.x_max_s
-        self.instance.r_ymn_s = self.y_min_s
-        self.instance.r_ymn_s = self.y_max_s
-        self.instance.r_zmn_s = self.z_min_s
-        self.instance.r_zmx_s = self.z_min_s
+        self.instance.r_xmn_s = self.x_min_s.value()
+        self.instance.r_xmx_s = self.x_max_s.value()
+        self.instance.r_ymn_s = self.y_min_s.value()
+        self.instance.r_ymn_s = self.y_max_s.value()
+        self.instance.r_zmn_s = self.z_min_s.value()
+        self.instance.r_zmx_s = self.z_min_s.value()
 
-        self.instance.r_xmn_r = self.x_min_r
-        self.instance.r_xmx_r = self.x_max_r
-        self.instance.r_ymn_r = self.y_min_r
-        self.instance.r_ymx_r = self.y_max_r
-        self.instance.r_zmn_r = self.z_min_r
-        self.instance.r_zmx_r = self.z_max_r
+        self.instance.r_xmn_r = self.x_min_r.value()
+        self.instance.r_xmx_r = self.x_max_r.value()
+        self.instance.r_ymn_r = self.y_min_r.value()
+        self.instance.r_ymx_r = self.y_max_r.value()
+        self.instance.r_zmn_r = self.z_min_r.value()
+        self.instance.r_zmx_r = self.z_max_r.value()
 
 
 class Instancing(object):
@@ -237,11 +239,15 @@ class Instancing(object):
         self.r_zmx_s = 1
 
         self.r_xmn_r = 1
-        self.r_xmx_r = 1
+        self.r_xmx_r = 360
         self.r_ymn_r = 1
-        self.r_ymx_r = 1
+        self.r_ymx_r = 360
         self.r_zmn_r = 1
-        self.r_zmx_r = 1
+        self.r_zmx_r = 360
+
+        self.xRot = random.uniform(self.r_xmn_r, self.r_xmx_r)
+        self.yRot = random.uniform(self.r_ymn_r, self.r_ymx_r)
+        self.zRot = random.uniform(self.r_zmn_r, self.r_zmx_r)
 
         self.selected = cmds.ls(orderedSelection=True)
 
@@ -256,9 +262,12 @@ class Instancing(object):
             cmds.scale(range(self.r_xmn_s, self.r_xmx_s),
                        range(self.r_ymn_s, self.r_ymx_s),
                        range(self.r_zmn_s, self.r_zmx_s), new_instance)
-            cmds.rotate(range(self.r_xmn_r, self.r_xmx_r),
-                        range(self.r_ymn_r, self.r_ymx_r),
-                        range(self.r_zmn_r , self.r_zmx_r), new_instance)
+
+            self.xRot = random.uniform(self.r_xmn_r, self.r_xmx_r)
+            self.yRot = random.uniform(self.r_ymn_r, self.r_ymx_r)
+            self.zRot = random.uniform(self.r_zmn_r, self.r_zmx_r)
+
+            cmds.rotate(self.xRot, self.yRot, self.zRot, new_instance)
         return
 
     def _get_vertices(self):
