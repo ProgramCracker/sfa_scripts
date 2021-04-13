@@ -21,7 +21,7 @@ class ScatterTool(QtWidgets.QDialog):
         super(ScatterTool, self).__init__(parent=maya_main_window())
         self.setWindowTitle("Scatter Tool")
         self.setMinimumWidth(500)
-        self.setMaximumHeight(1000)
+        self.setMaximumHeight(200)
         self.setWindowFlags(self.windowFlags() ^
                             QtCore.Qt.WindowContextHelpButtonHint)
         self.select = cmds.ls(orderedSelection=True)
@@ -59,7 +59,7 @@ class ScatterTool(QtWidgets.QDialog):
             self.instance.time_to_instance_on_vertices()
         elif self.face_chkBox.isChecked():
             cmds.warning("The faces feature isn't added yet. Use the"
-                         "vertices check box")
+                         " vertices check box.")
         else:
             cmds.warning("Please choose a check box.")
 
@@ -109,26 +109,32 @@ class ScatterTool(QtWidgets.QDialog):
         self.x_min_s = QtWidgets.QSpinBox()
         self.x_min_s.setFixedWidth(50)
         self.x_min_s.setValue(self.instance.r_xmn_s)
+        self.x_min_s.setRange(0.1, 100.)
 
         self.x_max_s = QtWidgets.QSpinBox()
         self.x_max_s.setFixedWidth(50)
         self.x_max_s.setValue(self.instance.r_xmx_s)
+        self.x_max_s.setRange(0.1, 100.)
 
         self.y_min_s = QtWidgets.QSpinBox()
         self.y_min_s.setFixedWidth(50)
         self.y_min_s.setValue(self.instance.r_ymn_s)
+        self.y_min_s.setRange(0.1, 100.)
 
         self.y_max_s = QtWidgets.QSpinBox()
         self.y_max_s.setFixedWidth(50)
         self.y_max_s.setValue(self.instance.r_ymx_s)
+        self.y_max_s.setRange(0.1, 100.)
 
         self.z_min_s = QtWidgets.QSpinBox()
         self.z_min_s.setFixedWidth(50)
         self.z_min_s.setValue(self.instance.r_zmn_s)
+        self.z_min_s.setRange(0.1, 100.)
 
         self.z_max_s = QtWidgets.QSpinBox()
         self.z_max_s.setFixedWidth(50)
         self.z_max_s.setValue(self.instance.r_zmx_s)
+        self.z_max_s.setRange(0.1, 100.)
 
         layout.addWidget(self.scale_header_lbl, 0, 0, 1, -1)
         layout.addWidget(self.min_lin_header, 1, 0)
@@ -168,26 +174,32 @@ class ScatterTool(QtWidgets.QDialog):
         self.x_min_r = QtWidgets.QSpinBox()
         self.x_min_r.setFixedWidth(50)
         self.x_min_r.setValue(self.instance.r_xmn_r)
+        self.x_min_r.setRange(0, 360)
 
         self.x_max_r = QtWidgets.QSpinBox()
         self.x_max_r.setFixedWidth(50)
         self.x_max_r.setValue(self.instance.r_xmx_r)
+        self.x_max_r.setRange(0, 360)
 
         self.y_min_r = QtWidgets.QSpinBox()
         self.y_min_r.setFixedWidth(50)
         self.y_min_r.setValue(self.instance.r_ymn_r)
+        self.y_min_r.setRange(0, 360)
 
         self.y_max_r = QtWidgets.QSpinBox()
         self.y_max_r.setFixedWidth(50)
         self.y_max_r.setValue(self.instance.r_ymx_r)
+        self.y_max_r.setRange(0, 360)
 
         self.z_min_r = QtWidgets.QSpinBox()
         self.z_min_r.setFixedWidth(50)
         self.z_min_r.setValue(self.instance.r_zmn_r)
+        self.z_min_r.setRange(0, 360)
 
         self.z_max_r = QtWidgets.QSpinBox()
         self.z_max_r.setFixedWidth(50)
         self.z_max_r.setValue(self.instance.r_zmx_r)
+        self.z_max_r.setRange(0, 360)
 
         layout.addWidget(self.scale_header_lbl, 0, 0, 1, -1)
         layout.addWidget(self.min_lin_header, 1, 0)
@@ -248,11 +260,11 @@ class Instancing(object):
         self.zScl = random.uniform(self.r_zmn_s, self.r_zmx_s)
 
         self.r_xmn_r = 1
-        self.r_xmx_r = 360
+        self.r_xmx_r = 90
         self.r_ymn_r = 1
-        self.r_ymx_r = 360
+        self.r_ymx_r = 90
         self.r_zmn_r = 1
-        self.r_zmx_r = 360
+        self.r_zmx_r = 90
 
         self.xRot = random.uniform(self.r_xmn_r, self.r_xmx_r)
         self.yRot = random.uniform(self.r_ymn_r, self.r_ymx_r)
