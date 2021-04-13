@@ -238,6 +238,10 @@ class Instancing(object):
         self.r_zmn_s = 1
         self.r_zmx_s = 1
 
+        self.xScl = random.uniform(self.r_xmn_s, self.r_xmx_s)
+        self.yScl = random.uniform(self.r_ymn_s, self.r_ymx_s)
+        self.zScl = random.uniform(self.r_zmn_s, self.r_zmx_s)
+
         self.r_xmn_r = 1
         self.r_xmx_r = 360
         self.r_ymn_r = 1
@@ -259,9 +263,12 @@ class Instancing(object):
             pos = cmds.pointPosition(vert)
             new_instance = cmds.instance(self.to_be_instanced)
             cmds.move(pos[0], pos[1], pos[2], new_instance)
-            cmds.scale(range(self.r_xmn_s, self.r_xmx_s),
-                       range(self.r_ymn_s, self.r_ymx_s),
-                       range(self.r_zmn_s, self.r_zmx_s), new_instance)
+
+            self.xScl = random.uniform(self.r_xmn_s, self.r_xmx_s)
+            self.yScl = random.uniform(self.r_ymn_s, self.r_ymx_s)
+            self.zScl = random.uniform(self.r_zmn_s, self.r_zmx_s)
+
+            cmds.scale(self.xScl, self.yScl, self.zScl, new_instance)
 
             self.xRot = random.uniform(self.r_xmn_r, self.r_xmx_r)
             self.yRot = random.uniform(self.r_ymn_r, self.r_ymx_r)
