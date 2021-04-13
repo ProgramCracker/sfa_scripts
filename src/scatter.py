@@ -5,9 +5,9 @@ from PySide2 import QtWidgets, QtCore
 from shiboken2 import wrapInstance
 import maya.OpenMayaUI as omui
 import maya.cmds as cmds
-import pymel.core as pmc
 
 log = logging.getLogger(__name__)
+
 
 def maya_main_window():
     """Return the maya main window widget"""
@@ -62,7 +62,6 @@ class ScatterTool(QtWidgets.QDialog):
                          " vertices check box.")
         else:
             cmds.warning("Please choose a check box.")
-
 
     def _create_selection_ui(self):
         self.target_header_lbl = QtWidgets.QLabel("Target Object to"
