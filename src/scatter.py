@@ -105,32 +105,32 @@ class ScatterTool(QtWidgets.QDialog):
         self.y_lbl_2 = QtWidgets.QLabel("y")
         self.z_lbl_2 = QtWidgets.QLabel("z")
 
-        self.x_min_s = QtWidgets.QSpinBox()
+        self.x_min_s = QtWidgets.QDoubleSpinBox()
         self.x_min_s.setFixedWidth(50)
         self.x_min_s.setValue(self.instance.r_xmn_s)
         self.x_min_s.setRange(0.1, 100.)
 
-        self.x_max_s = QtWidgets.QSpinBox()
+        self.x_max_s = QtWidgets.QDoubleSpinBox()
         self.x_max_s.setFixedWidth(50)
         self.x_max_s.setValue(self.instance.r_xmx_s)
         self.x_max_s.setRange(0.1, 100.)
 
-        self.y_min_s = QtWidgets.QSpinBox()
+        self.y_min_s = QtWidgets.QDoubleSpinBox()
         self.y_min_s.setFixedWidth(50)
         self.y_min_s.setValue(self.instance.r_ymn_s)
         self.y_min_s.setRange(0.1, 100.)
 
-        self.y_max_s = QtWidgets.QSpinBox()
+        self.y_max_s = QtWidgets.QDoubleSpinBox()
         self.y_max_s.setFixedWidth(50)
         self.y_max_s.setValue(self.instance.r_ymx_s)
         self.y_max_s.setRange(0.1, 100.)
 
-        self.z_min_s = QtWidgets.QSpinBox()
+        self.z_min_s = QtWidgets.QDoubleSpinBox()
         self.z_min_s.setFixedWidth(50)
         self.z_min_s.setValue(self.instance.r_zmn_s)
         self.z_min_s.setRange(0.1, 100.)
 
-        self.z_max_s = QtWidgets.QSpinBox()
+        self.z_max_s = QtWidgets.QDoubleSpinBox()
         self.z_max_s.setFixedWidth(50)
         self.z_max_s.setValue(self.instance.r_zmx_s)
         self.z_max_s.setRange(0.1, 100.)
