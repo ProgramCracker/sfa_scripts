@@ -259,11 +259,11 @@ class Instancing(object):
         self.zScl = random.uniform(self.r_zmn_s, self.r_zmx_s)
 
         self.r_xmn_r = 1
-        self.r_xmx_r = 90
+        self.r_xmx_r = 1
         self.r_ymn_r = 1
-        self.r_ymx_r = 90
+        self.r_ymx_r = 1
         self.r_zmn_r = 1
-        self.r_zmx_r = 90
+        self.r_zmx_r = 1
 
         self.xRot = random.uniform(self.r_xmn_r, self.r_xmx_r)
         self.yRot = random.uniform(self.r_ymn_r, self.r_ymx_r)
