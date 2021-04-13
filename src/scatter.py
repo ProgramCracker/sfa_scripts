@@ -51,13 +51,18 @@ class ScatterTool(QtWidgets.QDialog):
 
     def creating_connections(self):
         self.scatter_btn.clicked.connect(self.scatter)
-        cmds.warning("button Active")
 
     @QtCore.Slot()
     def scatter(self):
         self._set_properties_from_ui()
-        cmds.warning("scatter was pressed")
-        self.instance.time_to_instance_on_vertices()
+        if self.vertex_chkBox.isChecked():
+            self.instance.time_to_instance_on_vertices()
+        elif self.face_chkBox.isChecked():
+            cmds.warning("The faces feature isn't added yet. Use the"
+                         "vertices check box")
+        else:
+            cmds.warning("Please choose a check box.")
+
 
     def _create_selection_ui(self):
         self.target_header_lbl = QtWidgets.QLabel("Target Object to"
@@ -79,7 +84,7 @@ class ScatterTool(QtWidgets.QDialog):
         self.group_header_lbl.setStyleSheet("font: 20px")
         self.vertex_chkBox = QtWidgets.QCheckBox("Vertices")
         self.vertex_chkBox.isChecked()
-        self.face_chkBox = QtWidgets.QCheckBox("Faces")
+        self.face_chkBox = QtWidgets.QCheckBox("Faces (Non-Functional)")
 
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.group_header_lbl)
@@ -278,7 +283,6 @@ class Instancing(object):
         return
 
     def _get_vertices(self):
-        cmds.warning("we are getting vertices")
         self.target = self.instance_on
         selected_mesh = cmds.ls(self.target, flatten=True)
         selected_verts = cmds.polyListComponentConversion(selected_mesh,
