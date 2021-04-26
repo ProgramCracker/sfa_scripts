@@ -345,7 +345,8 @@ class Instancing(object):
 
             cmds.rotate(self.xRot, self.yRot, self.zRot, new_instance)
 
-            cmds.normalConstraint(vert, new_instance)
+            cmds.normalConstraint(vert, new_instance,
+                                  aimVector=[0, 1, 0])
         return
 
 
@@ -358,6 +359,6 @@ class Instancing(object):
                                            selectionMask=31)
         random.shuffle(selected_verts)
         count = int(len(selected_verts) * self.percent_of_verts)
-        selected_verts[-count:], new_selection = [], \
+        selected_verts[-count:], new_selection = [],\
                                                  selected_verts[-count:]
         return new_selection
