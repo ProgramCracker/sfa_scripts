@@ -60,10 +60,10 @@ class ScatterTool(QtWidgets.QDialog):
         self._set_properties_from_ui()
         if self.vertex_chkBox.isChecked():
             cmds.warning("You clicked scatter")
-            self.instance.instance_only_some()
-        elif self.normals_chkBox.isChecked():
-            cmds.warning("The faces feature isn't added yet. Use the"
-                         " vertices check box.")
+            if self.normals_chkBox.isChecked():
+                self.instance.instance_using_normals()
+            else:
+                self.instance.instance_only_some()
         else:
             cmds.warning("Please choose a check box.")
 
@@ -301,33 +301,14 @@ class Instancing(object):
         self.instance_on = self.selected[0]
         self.to_be_instanced = self.selected[1]
 
-    def time_to_instance_on_vertices(self):
-        for vert in self._get_vertices():
-            pos = cmds.pointPosition(vert)
-            new_instance = cmds.instance(self.to_be_instanced)
-            cmds.move(pos[0], pos[1], pos[2], new_instance)
-
-            self.xScl = random.uniform(self.r_xmn_s, self.r_xmx_s)
-            self.yScl = random.uniform(self.r_ymn_s, self.r_ymx_s)
-            self.zScl = random.uniform(self.r_zmn_s, self.r_zmx_s)
-
-            cmds.scale(self.xScl, self.yScl, self.zScl, new_instance)
-
-            self.xRot = random.uniform(self.r_xmn_r, self.r_xmx_r)
-            self.yRot = random.uniform(self.r_ymn_r, self.r_ymx_r)
-            self.zRot = random.uniform(self.r_zmn_r, self.r_zmx_r)
-
-            cmds.rotate(self.xRot, self.yRot, self.zRot, new_instance)
-        return
-
-    def _get_vertices(self):
-        self.target = self.instance_on
-        selected_mesh = cmds.ls(self.target, flatten=True)
-        selected_verts = cmds.polyListComponentConversion(selected_mesh,
-                                                          toVertex=True)
-        selected_verts = cmds.filterExpand(selected_verts,
-                                           selectionMask=31)
-        return selected_verts
+    # def _get_vertices(self):
+    #     self.target = self.instance_on
+    #     selected_mesh = cmds.ls(self.target, flatten=True)
+    #     selected_verts = cmds.polyListComponentConversion(selected_mesh,
+    #                                                       toVertex=True)
+    #     selected_verts = cmds.filterExpand(selected_verts,
+    #                                        selectionMask=31)
+    #     return selected_verts
 
     def instance_only_some(self):
         for vert in self._get_percentage_of_vertices():
@@ -348,6 +329,29 @@ class Instancing(object):
 
             cmds.rotate(self.xRot, self.yRot, self.zRot, new_instance)
         return
+
+    def instance_using_normals(self):
+        for vert in self._get_percentage_of_vertices():
+            pos = cmds.pointPosition(vert)
+            new_instance = cmds.instance(self.to_be_instanced)
+            cmds.warning("instancing")
+            cmds.normalConstraint(vert, new_instance)
+            cmds.move(pos[0], pos[1], pos[2], new_instance)
+
+
+            self.xScl = random.uniform(self.r_xmn_s, self.r_xmx_s)
+            self.yScl = random.uniform(self.r_ymn_s, self.r_ymx_s)
+            self.zScl = random.uniform(self.r_zmn_s, self.r_zmx_s)
+
+            cmds.scale(self.xScl, self.yScl, self.zScl, new_instance)
+
+            self.xRot = random.uniform(self.r_xmn_r, self.r_xmx_r)
+            self.yRot = random.uniform(self.r_ymn_r, self.r_ymx_r)
+            self.zRot = random.uniform(self.r_zmn_r, self.r_zmx_r)
+
+            cmds.rotate(self.xRot, self.yRot, self.zRot, new_instance)
+        return
+
 
     def _get_percentage_of_vertices(self):
         self.target = self.instance_on
