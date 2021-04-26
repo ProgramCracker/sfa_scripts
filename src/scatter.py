@@ -59,7 +59,8 @@ class ScatterTool(QtWidgets.QDialog):
     def scatter(self):
         self._set_properties_from_ui()
         if self.vertex_chkBox.isChecked():
-            self.instance.time_to_instance_on_vertices()
+            cmds.warning("You clicked scatter")
+            self.instance.instance_only_some()
         elif self.normals_chkBox.isChecked():
             cmds.warning("The faces feature isn't added yet. Use the"
                          " vertices check box.")
@@ -100,8 +101,9 @@ class ScatterTool(QtWidgets.QDialog):
                                           " vertices will be instanced"
                                           " on?")
         self.group_header_lbl.setStyleSheet("font: 20px")
-        self.percent_spnbx = QtWidgets.QSpinBox()
-        self.percent_spnbx.setRange(1, 100)
+        self.percent_spnbx = QtWidgets.QDoubleSpinBox()
+        self.percent_spnbx.setRange(0.01, 1.00)
+        self.percent_spnbx.setValue(self.instance.percent_of_verts)
 
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.group_lbl)
@@ -262,6 +264,8 @@ class ScatterTool(QtWidgets.QDialog):
         self.instance.r_zmn_r = self.z_min_r.value()
         self.instance.r_zmx_r = self.z_max_r.value()
 
+        self.instance.percent_of_verts = self.percent_spnbx.value()
+
 
 class Instancing(object):
 
@@ -288,6 +292,8 @@ class Instancing(object):
         self.xRot = random.uniform(self.r_xmn_r, self.r_xmx_r)
         self.yRot = random.uniform(self.r_ymn_r, self.r_ymx_r)
         self.zRot = random.uniform(self.r_zmn_r, self.r_zmx_r)
+
+        self.percent_of_verts = 1.00
 
         self.selected = cmds.ls(orderedSelection=True)
 
@@ -324,9 +330,10 @@ class Instancing(object):
         return selected_verts
 
     def instance_only_some(self):
-        for vert in self._get_vertices():
+        for vert in self._get_percentage_of_vertices():
             pos = cmds.pointPosition(vert)
             new_instance = cmds.instance(self.to_be_instanced)
+            cmds.warning("instancing")
             cmds.move(pos[0], pos[1], pos[2], new_instance)
 
             self.xScl = random.uniform(self.r_xmn_s, self.r_xmx_s)
@@ -349,4 +356,9 @@ class Instancing(object):
                                                           toVertex=True)
         selected_verts = cmds.filterExpand(selected_verts,
                                            selectionMask=31)
-        return selected_verts
+        random.shuffle(selected_verts)
+        count = int(len(selected_verts) * self.percent_of_verts)
+        selected_verts[-count:], new_selection = [], \
+                                                 selected_verts[-count:]
+        cmds.warning("Got the verts")
+        return new_selection
