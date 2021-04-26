@@ -59,11 +59,10 @@ class ScatterTool(QtWidgets.QDialog):
     def scatter(self):
         self._set_properties_from_ui()
         if self.vertex_chkBox.isChecked():
-            cmds.warning("You clicked scatter")
             if self.normals_chkBox.isChecked():
                 self.instance.instance_using_normals()
             else:
-                self.instance.instance_only_some()
+                self.instance.instance_mesh()
         else:
             cmds.warning("Please choose a check box.")
 
@@ -253,9 +252,9 @@ class ScatterTool(QtWidgets.QDialog):
         self.instance.r_xmn_s = self.x_min_s.value()
         self.instance.r_xmx_s = self.x_max_s.value()
         self.instance.r_ymn_s = self.y_min_s.value()
-        self.instance.r_ymn_s = self.y_max_s.value()
+        self.instance.r_ymx_s = self.y_max_s.value()
         self.instance.r_zmn_s = self.z_min_s.value()
-        self.instance.r_zmx_s = self.z_min_s.value()
+        self.instance.r_zmx_s = self.z_max_s.value()
 
         self.instance.r_xmn_r = self.x_min_r.value()
         self.instance.r_xmx_r = self.x_max_r.value()
@@ -297,7 +296,6 @@ class Instancing(object):
 
         self.selected = cmds.ls(orderedSelection=True)
 
-
         self.instance_on = self.selected[0]
         self.to_be_instanced = self.selected[1]
 
@@ -310,11 +308,10 @@ class Instancing(object):
     #                                        selectionMask=31)
     #     return selected_verts
 
-    def instance_only_some(self):
+    def instance_mesh(self):
         for vert in self._get_percentage_of_vertices():
             pos = cmds.pointPosition(vert)
             new_instance = cmds.instance(self.to_be_instanced)
-            cmds.warning("instancing")
             cmds.move(pos[0], pos[1], pos[2], new_instance)
 
             self.xScl = random.uniform(self.r_xmn_s, self.r_xmx_s)
@@ -334,10 +331,7 @@ class Instancing(object):
         for vert in self._get_percentage_of_vertices():
             pos = cmds.pointPosition(vert)
             new_instance = cmds.instance(self.to_be_instanced)
-            cmds.warning("instancing")
-            cmds.normalConstraint(vert, new_instance)
             cmds.move(pos[0], pos[1], pos[2], new_instance)
-
 
             self.xScl = random.uniform(self.r_xmn_s, self.r_xmx_s)
             self.yScl = random.uniform(self.r_ymn_s, self.r_ymx_s)
@@ -350,6 +344,8 @@ class Instancing(object):
             self.zRot = random.uniform(self.r_zmn_r, self.r_zmx_r)
 
             cmds.rotate(self.xRot, self.yRot, self.zRot, new_instance)
+
+            cmds.normalConstraint(vert, new_instance)
         return
 
 
@@ -364,5 +360,4 @@ class Instancing(object):
         count = int(len(selected_verts) * self.percent_of_verts)
         selected_verts[-count:], new_selection = [], \
                                                  selected_verts[-count:]
-        cmds.warning("Got the verts")
         return new_selection
