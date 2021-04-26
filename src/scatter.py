@@ -21,14 +21,15 @@ class ScatterTool(QtWidgets.QDialog):
         super(ScatterTool, self).__init__(parent=maya_main_window())
         self.setWindowTitle("Scatter Tool")
         self.setMinimumWidth(500)
-        self.setMaximumHeight(200)
+        self.setMaximumHeight(500)
         self.setWindowFlags(self.windowFlags() ^
                             QtCore.Qt.WindowContextHelpButtonHint)
-        self.select = cmds.ls(orderedSelection=True)
 
         self.instance = Instancing()
         self.create_ui()
         self.creating_connections()
+
+
 
     def create_ui(self):
         self.title_lbl = QtWidgets.QLabel("Super Scatter Tool 9000")
@@ -38,15 +39,17 @@ class ScatterTool(QtWidgets.QDialog):
         self.scale_lay = self._create_randomscale_ui()
         self.position_lay = self._create_randomposition_ui()
         self.chkBox_lay = self._create_checkbox_ui()
+        self.percent_lay = self._create_percentage_ui()
 
         self.main_lay = QtWidgets.QGridLayout()
         self.main_lay.setColumnMinimumWidth(3, 200)
         self.main_lay.addWidget(self.title_lbl, 0, 0)
         self.main_lay.addLayout(self.select_lay, 2, 0)
         self.main_lay.addLayout(self.chkBox_lay, 3, 0)
+        self.main_lay.addLayout(self.percent_lay, 4, 3)
         self.main_lay.addLayout(self.scale_lay, 2, 3)
         self.main_lay.addLayout(self.position_lay, 3, 3)
-        self.main_lay.addLayout(self.button_lay, 4, 3)
+        self.main_lay.addLayout(self.button_lay, 4, 0)
         self.setLayout(self.main_lay)
 
     def creating_connections(self):
@@ -57,7 +60,7 @@ class ScatterTool(QtWidgets.QDialog):
         self._set_properties_from_ui()
         if self.vertex_chkBox.isChecked():
             self.instance.time_to_instance_on_vertices()
-        elif self.face_chkBox.isChecked():
+        elif self.normals_chkBox.isChecked():
             cmds.warning("The faces feature isn't added yet. Use the"
                          " vertices check box.")
         else:
@@ -66,10 +69,10 @@ class ScatterTool(QtWidgets.QDialog):
     def _create_selection_ui(self):
         self.target_header_lbl = QtWidgets.QLabel("Target Object to"
                                                   " Instance On")
-        self.surface_le = QtWidgets.QLineEdit(self.select[0])
+        self.surface_le = QtWidgets.QLineEdit(self.instance.selected[0])
         self.instance_header_lbl = QtWidgets.QLabel("Object to "
                                                     "Instance")
-        self.int_obj_le = QtWidgets.QLineEdit(self.select[1])
+        self.int_obj_le = QtWidgets.QLineEdit(self.instance.selected[1])
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.target_header_lbl)
         layout.addWidget(self.surface_le)
@@ -83,14 +86,29 @@ class ScatterTool(QtWidgets.QDialog):
         self.group_header_lbl.setStyleSheet("font: 20px")
         self.vertex_chkBox = QtWidgets.QCheckBox("Vertices")
         self.vertex_chkBox.isChecked()
-        self.face_chkBox = QtWidgets.QCheckBox("Faces (Non-Functional)")
+        self.normals_chkBox = QtWidgets.QCheckBox("Align to Normals")
 
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.group_header_lbl)
         layout.addWidget(self.vertex_chkBox)
-        layout.addWidget(self.face_chkBox)
+        layout.addWidget(self.normals_chkBox)
 
         return layout
+
+    def _create_percentage_ui(self):
+        self.group_lbl = QtWidgets.QLabel("What percentage of selected"
+                                          " vertices will be instanced"
+                                          " on?")
+        self.group_header_lbl.setStyleSheet("font: 20px")
+        self.percent_spnbx = QtWidgets.QSpinBox()
+        self.percent_spnbx.setRange(1, 100)
+
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(self.group_lbl)
+        layout.addWidget(self.percent_spnbx)
+
+        return layout
+
 
     def _create_randomscale_ui(self):
         layout = QtWidgets.QGridLayout()
@@ -223,7 +241,9 @@ class ScatterTool(QtWidgets.QDialog):
 
     def _create_button_ui(self):
         self.scatter_btn = QtWidgets.QPushButton("Scatter")
+        self.update_btn = QtWidgets.QPushButton("Update Selection")
         layout = QtWidgets.QHBoxLayout()
+        layout.addWidget(self.update_btn)
         layout.addWidget(self.scatter_btn)
         return layout
 
@@ -271,6 +291,7 @@ class Instancing(object):
 
         self.selected = cmds.ls(orderedSelection=True)
 
+
         self.instance_on = self.selected[0]
         self.to_be_instanced = self.selected[1]
 
@@ -294,6 +315,34 @@ class Instancing(object):
         return
 
     def _get_vertices(self):
+        self.target = self.instance_on
+        selected_mesh = cmds.ls(self.target, flatten=True)
+        selected_verts = cmds.polyListComponentConversion(selected_mesh,
+                                                          toVertex=True)
+        selected_verts = cmds.filterExpand(selected_verts,
+                                           selectionMask=31)
+        return selected_verts
+
+    def instance_only_some(self):
+        for vert in self._get_vertices():
+            pos = cmds.pointPosition(vert)
+            new_instance = cmds.instance(self.to_be_instanced)
+            cmds.move(pos[0], pos[1], pos[2], new_instance)
+
+            self.xScl = random.uniform(self.r_xmn_s, self.r_xmx_s)
+            self.yScl = random.uniform(self.r_ymn_s, self.r_ymx_s)
+            self.zScl = random.uniform(self.r_zmn_s, self.r_zmx_s)
+
+            cmds.scale(self.xScl, self.yScl, self.zScl, new_instance)
+
+            self.xRot = random.uniform(self.r_xmn_r, self.r_xmx_r)
+            self.yRot = random.uniform(self.r_ymn_r, self.r_ymx_r)
+            self.zRot = random.uniform(self.r_zmn_r, self.r_zmx_r)
+
+            cmds.rotate(self.xRot, self.yRot, self.zRot, new_instance)
+        return
+
+    def _get_percentage_of_vertices(self):
         self.target = self.instance_on
         selected_mesh = cmds.ls(self.target, flatten=True)
         selected_verts = cmds.polyListComponentConversion(selected_mesh,
