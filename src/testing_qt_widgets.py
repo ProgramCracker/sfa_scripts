@@ -20,17 +20,17 @@ class QTTesting(QtWidgets.QDialog):
         self.setWindowTitle("QT_Testing")
         self.setMinimumWidth(500)
         self.setMaximumHeight(200)
-
         self.setWindowFlags(self.windowFlags() ^
                             QtCore.Qt.WindowContextHelpButtonHint)
         self.create_ui()
-        self.selection()
+        self.creating_connections()
+        self.function = functional()
 
     def create_ui(self):
         self.title_lbl = QtWidgets.QLabel("Test UI")
         self.title_lbl.setStyleSheet("font: bold 20px")
         self.lists = self.list_of_Selected()
-        self.boxes = self.checkBoxes()
+        self.boxes = self.buttons()
 
         self.main_lay = QtWidgets.QGridLayout()
         self.main_lay.setColumnMinimumWidth(3, 200)
@@ -39,46 +39,70 @@ class QTTesting(QtWidgets.QDialog):
         self.main_lay.addLayout(self.lists, 3, 0)
         self.setLayout(self.main_lay)
 
+    def creating_connections(self):
+        self.first_btn.clicked.connect(self.update_first)
+        self.second_btn.clicked.connect(self.update_second)
+
+    @QtCore.Slot()
+    def update_first(self):
+        cmds.warning("clicked button")
+        self.function.update_locations()
+        self.selected_list.clear()
+        for object in self.function.update_locations():
+            self.selected_list.addItem(object)
+            cmds.warning("putting object in")
+        self.selected_list.update()
+
+    @QtCore.Slot()
+    def update_second(self):
+        self.function.update_targets_to_instance()
+        self.target_list.clear()
+        for object in self.function.update_targets_to_instance():
+            self.target_list.addItem(object)
+        self.target_list.update()
+
     def list_of_Selected(self):
         layout = QtWidgets.QHBoxLayout()
         self.selected_list = QtWidgets.QListWidget()
-        self.targetList = QtWidgets.QListWidget()
+        self.target_list = QtWidgets.QListWidget()
         first = "dog"
         second = "cat"
         third = "monkey"
         self.selected_list.addItem(first)
         self.selected_list.addItem(second)
-        self.targetList.addItem(third)
+        self.target_list.addItem(third)
         layout.addWidget(self.selected_list, 0, 0)
-        layout.addWidget(self.targetList, 0, 1)
+        layout.addWidget(self.target_list, 0, 1)
 
         return layout
 
-    def checkBoxes(self):
+    def buttons(self):
         layout = QtWidgets.QHBoxLayout()
-        self.first_box = QtWidgets.QCheckBox("First List")
-        self.second_box = QtWidgets.QCheckBox("Second List")
-        self.first_box.setChecked(True)
+        self.first_btn = QtWidgets.QPushButton("Update Selection")
+        self.second_btn = QtWidgets.QPushButton("Update Selection")
 
-        layout.addWidget(self.first_box, 0, 0)
-        layout.addWidget(self.second_box, 0, 0)
+        layout.addWidget(self.first_btn)
+        layout.addWidget(self.second_btn)
 
         return layout
 
-    def selection(self):
-        if self.first_box.isChecked():
-            self.selected = cmds.ls(orderedSelection=True)
-            self.selected_list.addItems(self.selected)
 
-            # if self.selected == 1():
-            #     cmds.warning("select target objects")
-            # else:
-            #
-        else:
-            cmds.warning("Choose a check box")
+class functional(object):
 
-    # while True:
-    #     if cmds.ls(selection=True) +:
-    #         self.selection()
-    #     else:
-    #         cmds.warning("Selected some shapes")
+    def __init__(self):
+        self.selected = cmds.ls(selection=True)
+
+        self.instance_list = []
+        self.instance_locations = []
+
+    def update_locations(self):
+        new_list = cmds.ls(selection=True)
+        self.instance_locations = new_list
+
+        return self.instance_locations
+
+    def update_targets_to_instance(self):
+        new_list = cmds.ls(selection=True)
+        self.instance_list = new_list
+
+        return self.instance_list

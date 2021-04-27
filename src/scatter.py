@@ -29,8 +29,6 @@ class ScatterTool(QtWidgets.QDialog):
         self.create_ui()
         self.creating_connections()
 
-
-
     def create_ui(self):
         self.title_lbl = QtWidgets.QLabel("Super Scatter Tool 9000")
         self.title_lbl.setStyleSheet("font: bold 20px")
@@ -44,16 +42,18 @@ class ScatterTool(QtWidgets.QDialog):
         self.main_lay = QtWidgets.QGridLayout()
         self.main_lay.setColumnMinimumWidth(3, 200)
         self.main_lay.addWidget(self.title_lbl, 0, 0)
-        self.main_lay.addLayout(self.select_lay, 2, 0)
-        self.main_lay.addLayout(self.chkBox_lay, 3, 0)
-        self.main_lay.addLayout(self.percent_lay, 4, 3)
-        self.main_lay.addLayout(self.scale_lay, 2, 3)
-        self.main_lay.addLayout(self.position_lay, 3, 3)
+        self.main_lay.addLayout(self.select_lay, 1, 0)
+        self.main_lay.addLayout(self.chkBox_lay, 2, 0)
+        self.main_lay.addLayout(self.percent_lay, 3, 3)
+        self.main_lay.addLayout(self.scale_lay, 1, 3)
+        self.main_lay.addLayout(self.position_lay, 2, 3)
         self.main_lay.addLayout(self.button_lay, 4, 0)
         self.setLayout(self.main_lay)
 
     def creating_connections(self):
         self.scatter_btn.clicked.connect(self.scatter)
+        self.first_btn.clicked.connect(self.update_first)
+        self.second_btn.clicked.connect(self.update_second)
 
     @QtCore.Slot()
     def scatter(self):
@@ -66,19 +66,54 @@ class ScatterTool(QtWidgets.QDialog):
         else:
             cmds.warning("Please choose a check box.")
 
+    @QtCore.Slot()
+    def update_first(self):
+        self.instance.update_locations()
+        self.instance_location_list.clear()
+        for object in self.instance.update_locations():
+            self.instance_location_list.addItem(object)
+        self.instance_location_list.update()
+
+    @QtCore.Slot()
+    def update_second(self):
+        self.instance.update_targets_to_instance()
+        self.to_instance_list.clear()
+        for object in self.instance.update_targets_to_instance():
+            self.to_instance_list.addItem(object)
+        self.to_instance_list.update()
+
     def _create_selection_ui(self):
-        self.target_header_lbl = QtWidgets.QLabel("Target Object to"
-                                                  " Instance On")
-        self.surface_le = QtWidgets.QLineEdit(self.instance.selected[0])
+        self.target_header_lbl = QtWidgets.QLabel("Where to Instance")
         self.instance_header_lbl = QtWidgets.QLabel("Object to "
                                                     "Instance")
-        self.int_obj_le = QtWidgets.QLineEdit(self.instance.selected[1])
-        layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(self.target_header_lbl)
-        layout.addWidget(self.surface_le)
-        layout.addWidget(self.instance_header_lbl)
-        layout.addWidget(self.int_obj_le)
+        self.instance_location_list = QtWidgets.QListWidget()
+        self.to_instance_list = QtWidgets.QListWidget()
+
+        self.first_btn = QtWidgets.QPushButton("Update Selection")
+        self.second_btn = QtWidgets.QPushButton("Update Selection")
+
+        layout = QtWidgets.QGridLayout()
+        layout.addWidget(self.target_header_lbl, 0, 0)
+        layout.addWidget(self.instance_location_list, 1, 0)
+        layout.addWidget(self.first_btn, 2, 0)
+        layout.addWidget(self.instance_header_lbl, 0, 1)
+        layout.addWidget(self.to_instance_list, 1, 1)
+        layout.addWidget(self.second_btn, 2, 1)
         return layout
+
+    # def _create_selection_ui(self):
+    #     self.target_header_lbl = QtWidgets.QLabel("Target Object to"
+    #                                               " Instance On")
+    #     self.surface_le = QtWidgets.QLineEdit(self.instance.selected[0])
+    #     self.instance_header_lbl = QtWidgets.QLabel("Object to "
+    #                                                 "Instance")
+    #     self.int_obj_le = QtWidgets.QLineEdit(self.instance.selected[1])
+    #     layout = QtWidgets.QVBoxLayout()
+    #     layout.addWidget(self.target_header_lbl)
+    #     layout.addWidget(self.surface_le)
+    #     layout.addWidget(self.instance_header_lbl)
+    #     layout.addWidget(self.int_obj_le)
+    #     return layout
 
     def _create_checkbox_ui(self):
         self.group_header_lbl = QtWidgets.QLabel("Instances will appear"
@@ -109,7 +144,6 @@ class ScatterTool(QtWidgets.QDialog):
         layout.addWidget(self.percent_spnbx)
 
         return layout
-
 
     def _create_randomscale_ui(self):
         layout = QtWidgets.QGridLayout()
@@ -296,17 +330,20 @@ class Instancing(object):
 
         self.selected = cmds.ls(orderedSelection=True)
 
-        self.instance_on = self.selected[0]
-        self.to_be_instanced = self.selected[1]
+        self.instance_on = []
+        self.to_be_instanced = []
 
-    # def _get_vertices(self):
-    #     self.target = self.instance_on
-    #     selected_mesh = cmds.ls(self.target, flatten=True)
-    #     selected_verts = cmds.polyListComponentConversion(selected_mesh,
-    #                                                       toVertex=True)
-    #     selected_verts = cmds.filterExpand(selected_verts,
-    #                                        selectionMask=31)
-    #     return selected_verts
+    def update_locations(self):
+        new_list = cmds.ls(selection=True)
+        self.instance_on = new_list
+
+        return self.instance_on
+
+    def update_targets_to_instance(self):
+        new_list = cmds.ls(selection=True)
+        self.to_be_instanced = new_list
+
+        return self.to_be_instanced
 
     def instance_mesh(self):
         for vert in self._get_percentage_of_vertices():
@@ -349,16 +386,15 @@ class Instancing(object):
                                   aimVector=[0, 1, 0])
         return
 
-
     def _get_percentage_of_vertices(self):
         self.target = self.instance_on
         selected_mesh = cmds.ls(self.target, flatten=True)
-        selected_verts = cmds.polyListComponentConversion(selected_mesh,
+        Selected_Verts = cmds.polyListComponentConversion(selected_mesh,
                                                           toVertex=True)
-        selected_verts = cmds.filterExpand(selected_verts,
+        Selected_Verts = cmds.filterExpand(Selected_Verts,
                                            selectionMask=31)
-        random.shuffle(selected_verts)
-        count = int(len(selected_verts) * self.percent_of_verts)
-        selected_verts[-count:], new_selection = [],\
-                                                 selected_verts[-count:]
+        random.shuffle(Selected_Verts)
+        count = int(len(Selected_Verts) * self.percent_of_verts)
+        Selected_Verts[-count:], new_selection = [],\
+                                                 Selected_Verts[-count:]
         return new_selection
