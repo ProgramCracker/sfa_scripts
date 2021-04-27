@@ -362,13 +362,14 @@ class Instancing(object):
             self.zRot = random.uniform(self.r_zmn_r, self.r_zmx_r)
 
             cmds.rotate(self.xRot, self.yRot, self.zRot, new_instance)
-        return
 
     def instance_using_normals(self):
         for vert in self._get_percentage_of_vertices():
             pos = cmds.pointPosition(vert)
             new_instance = cmds.instance(self.to_be_instanced)
-            cmds.move(pos[0], pos[1], pos[2], new_instance)
+            cmds.move(pos[0], pos[1], pos[2], new_instance,
+                      scalePivotRelative=True, rotatePivotRelative=True
+                      , absolute=True)
 
             self.xScl = random.uniform(self.r_xmn_s, self.r_xmx_s)
             self.yScl = random.uniform(self.r_ymn_s, self.r_ymx_s)
@@ -384,7 +385,6 @@ class Instancing(object):
 
             cmds.normalConstraint(vert, new_instance,
                                   aimVector=[0, 1, 0])
-        return
 
     def _get_percentage_of_vertices(self):
         self.target = self.instance_on
