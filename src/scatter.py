@@ -101,20 +101,6 @@ class ScatterTool(QtWidgets.QDialog):
         layout.addWidget(self.second_btn, 2, 1)
         return layout
 
-    # def _create_selection_ui(self):
-    #     self.target_header_lbl = QtWidgets.QLabel("Target Object to"
-    #                                               " Instance On")
-    #     self.surface_le = QtWidgets.QLineEdit(self.instance.selected[0])
-    #     self.instance_header_lbl = QtWidgets.QLabel("Object to "
-    #                                                 "Instance")
-    #     self.int_obj_le = QtWidgets.QLineEdit(self.instance.selected[1])
-    #     layout = QtWidgets.QVBoxLayout()
-    #     layout.addWidget(self.target_header_lbl)
-    #     layout.addWidget(self.surface_le)
-    #     layout.addWidget(self.instance_header_lbl)
-    #     layout.addWidget(self.int_obj_le)
-    #     return layout
-
     def _create_checkbox_ui(self):
         self.group_header_lbl = QtWidgets.QLabel("Instances will appear"
                                                  " on?")
@@ -346,32 +332,12 @@ class Instancing(object):
         return self.to_be_instanced
 
     def instance_mesh(self):
-        for vert in self._get_percentage_of_vertices():
-            pos = cmds.pointPosition(vert)
-            new_instance = cmds.instance(self.to_be_instanced)
-            cmds.move(pos[0], pos[1], pos[2], new_instance)
-
-            self.xScl = random.uniform(self.r_xmn_s, self.r_xmx_s)
-            self.yScl = random.uniform(self.r_ymn_s, self.r_ymx_s)
-            self.zScl = random.uniform(self.r_zmn_s, self.r_zmx_s)
-
-            cmds.scale(self.xScl, self.yScl, self.zScl, new_instance)
-
-            self.xRot = random.uniform(self.r_xmn_r, self.r_xmx_r)
-            self.yRot = random.uniform(self.r_ymn_r, self.r_ymx_r)
-            self.zRot = random.uniform(self.r_zmn_r, self.r_zmx_r)
-
-            cmds.rotate(self.xRot, self.yRot, self.zRot, new_instance)
-
-    def instance_using_normals(self):
         list = self.to_be_instanced
         for shape in list:
             for vert in self._get_percentage_of_vertices():
                 pos = cmds.pointPosition(vert)
                 new_instance = cmds.instance(shape)
-                cmds.move(pos[0], pos[1], pos[2], new_instance,
-                          scalePivotRelative=True,
-                          rotatePivotRelative=True, absolute=True)
+                cmds.move(pos[0], pos[1], pos[2], new_instance)
 
                 self.xScl = random.uniform(self.r_xmn_s, self.r_xmx_s)
                 self.yScl = random.uniform(self.r_ymn_s, self.r_ymx_s)
@@ -387,9 +353,37 @@ class Instancing(object):
                 cmds.rotate(self.xRot, self.yRot, self.zRot,
                             new_instance)
 
+    def instance_using_normals(self):
+        list = self.to_be_instanced
+        for shape in list:
+            originalSclX = cmds.getAttr(shape+'.scaleX', asString=True)
+            originalSclY = cmds.getAttr(shape+'.scaleY', asString=True)
+            originalSclZ = cmds.getAttr(shape+'.scaleZ', asString=True)
+            for vert in self._get_percentage_of_vertices():
+                pos = cmds.pointPosition(vert)
+                new_instance = cmds.instance(shape)
+                cmds.move(pos[0], pos[1], pos[2], new_instance,
+                          scalePivotRelative=True,
+                          rotatePivotRelative=True, absolute=True)
+
+                self.xScl = random.uniform(self.r_xmn_s, self.r_xmx_s)
+                self.yScl = random.uniform(self.r_ymn_s, self.r_ymx_s)
+                self.zScl = random.uniform(self.r_zmn_s, self.r_zmx_s)
+
+                cmds.scale(self.xScl * originalSclX,
+                           self.yScl * originalSclY,
+                           self.zScl * originalSclZ,
+                           new_instance)
+
+                self.xRot = random.uniform(self.r_xmn_r, self.r_xmx_r)
+                self.yRot = random.uniform(self.r_ymn_r, self.r_ymx_r)
+                self.zRot = random.uniform(self.r_zmn_r, self.r_zmx_r)
+
+                cmds.rotate(self.xRot, self.yRot, self.zRot,
+                            new_instance)
+
                 cmds.normalConstraint(vert, new_instance,
                                       aimVector=[0, 1, 0])
-
 
     def _get_percentage_of_vertices(self):
         self.target = self.instance_on
