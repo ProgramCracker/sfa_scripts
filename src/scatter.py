@@ -334,6 +334,9 @@ class Instancing(object):
     def instance_mesh(self):
         list = self.to_be_instanced
         for shape in list:
+            originalSclX = cmds.getAttr(shape+'.scaleX', asString=True)
+            originalSclY = cmds.getAttr(shape+'.scaleY', asString=True)
+            originalSclZ = cmds.getAttr(shape+'.scaleZ', asString=True)
             for vert in self._get_percentage_of_vertices():
                 pos = cmds.pointPosition(vert)
                 new_instance = cmds.instance(shape)
@@ -343,7 +346,9 @@ class Instancing(object):
                 self.yScl = random.uniform(self.r_ymn_s, self.r_ymx_s)
                 self.zScl = random.uniform(self.r_zmn_s, self.r_zmx_s)
 
-                cmds.scale(self.xScl, self.yScl, self.zScl,
+                cmds.scale(self.xScl * originalSclX,
+                           self.yScl * originalSclY,
+                           self.zScl * originalSclZ,
                            new_instance)
 
                 self.xRot = random.uniform(self.r_xmn_r, self.r_xmx_r)
