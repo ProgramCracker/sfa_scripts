@@ -364,27 +364,32 @@ class Instancing(object):
             cmds.rotate(self.xRot, self.yRot, self.zRot, new_instance)
 
     def instance_using_normals(self):
-        for vert in self._get_percentage_of_vertices():
-            pos = cmds.pointPosition(vert)
-            new_instance = cmds.instance(self.to_be_instanced)
-            cmds.move(pos[0], pos[1], pos[2], new_instance,
-                      scalePivotRelative=True, rotatePivotRelative=True
-                      , absolute=True)
+        list = self.to_be_instanced
+        for shape in list:
+            for vert in self._get_percentage_of_vertices():
+                pos = cmds.pointPosition(vert)
+                new_instance = cmds.instance(shape)
+                cmds.move(pos[0], pos[1], pos[2], new_instance,
+                          scalePivotRelative=True,
+                          rotatePivotRelative=True, absolute=True)
 
-            self.xScl = random.uniform(self.r_xmn_s, self.r_xmx_s)
-            self.yScl = random.uniform(self.r_ymn_s, self.r_ymx_s)
-            self.zScl = random.uniform(self.r_zmn_s, self.r_zmx_s)
+                self.xScl = random.uniform(self.r_xmn_s, self.r_xmx_s)
+                self.yScl = random.uniform(self.r_ymn_s, self.r_ymx_s)
+                self.zScl = random.uniform(self.r_zmn_s, self.r_zmx_s)
 
-            cmds.scale(self.xScl, self.yScl, self.zScl, new_instance)
+                cmds.scale(self.xScl, self.yScl, self.zScl,
+                           new_instance)
 
-            self.xRot = random.uniform(self.r_xmn_r, self.r_xmx_r)
-            self.yRot = random.uniform(self.r_ymn_r, self.r_ymx_r)
-            self.zRot = random.uniform(self.r_zmn_r, self.r_zmx_r)
+                self.xRot = random.uniform(self.r_xmn_r, self.r_xmx_r)
+                self.yRot = random.uniform(self.r_ymn_r, self.r_ymx_r)
+                self.zRot = random.uniform(self.r_zmn_r, self.r_zmx_r)
 
-            cmds.rotate(self.xRot, self.yRot, self.zRot, new_instance)
+                cmds.rotate(self.xRot, self.yRot, self.zRot,
+                            new_instance)
 
-            cmds.normalConstraint(vert, new_instance,
-                                  aimVector=[0, 1, 0])
+                cmds.normalConstraint(vert, new_instance,
+                                      aimVector=[0, 1, 0])
+
 
     def _get_percentage_of_vertices(self):
         self.target = self.instance_on
