@@ -368,8 +368,10 @@ class Instancing(object):
             print(shape)
 
             for vert in vertices:
-                del vertices[0]
+                #del vertices[0]
+                print(vert)
                 pos = cmds.pointPosition(vert)
+                vertices.remove(vert)
                 new_instance = cmds.instance(shape)
                 cmds.move(pos[0], pos[1], pos[2], new_instance,
                           scalePivotRelative=True,
