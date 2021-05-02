@@ -360,11 +360,15 @@ class Instancing(object):
 
     def instance_using_normals(self):
         list = self.to_be_instanced
+        vertices = self._get_percentage_of_vertices()
         for shape in list:
             originalSclX = cmds.getAttr(shape+'.scaleX', asString=True)
             originalSclY = cmds.getAttr(shape+'.scaleY', asString=True)
             originalSclZ = cmds.getAttr(shape+'.scaleZ', asString=True)
-            for vert in self._get_percentage_of_vertices():
+            print(shape)
+
+            for vert in vertices:
+                del vertices[0]
                 pos = cmds.pointPosition(vert)
                 new_instance = cmds.instance(shape)
                 cmds.move(pos[0], pos[1], pos[2], new_instance,
@@ -389,13 +393,14 @@ class Instancing(object):
 
                 cmds.normalConstraint(vert, new_instance,
                                       aimVector=[0, 1, 0])
+                print (vertices)
 
     def _get_percentage_of_vertices(self):
         self.target = self.instance_on
         selected_mesh = cmds.ls(self.target, flatten=True)
-        Selected_Verts = cmds.polyListComponentConversion(selected_mesh,
+        Target_Verts = cmds.polyListComponentConversion(selected_mesh,
                                                           toVertex=True)
-        Selected_Verts = cmds.filterExpand(Selected_Verts,
+        Selected_Verts = cmds.filterExpand(Target_Verts,
                                            selectionMask=31)
         random.shuffle(Selected_Verts)
         count = int(len(Selected_Verts) * self.percent_of_verts)
