@@ -20,8 +20,8 @@ class ScatterTool(QtWidgets.QDialog):
     def __init__(self):
         super(ScatterTool, self).__init__(parent=maya_main_window())
         self.setWindowTitle("Scatter Tool")
-        self.setMinimumWidth(500)
-        self.setMaximumHeight(500)
+        self.setMinimumWidth(550)
+        self.setMaximumHeight(300)
         self.setWindowFlags(self.windowFlags() ^
                             QtCore.Qt.WindowContextHelpButtonHint)
 
@@ -40,14 +40,14 @@ class ScatterTool(QtWidgets.QDialog):
         self.percent_lay = self._create_percentage_ui()
 
         self.main_lay = QtWidgets.QGridLayout()
-        self.main_lay.setColumnMinimumWidth(3, 200)
+        self.main_lay.setColumnMinimumWidth(0, 150)
         self.main_lay.addWidget(self.title_lbl, 0, 0)
         self.main_lay.addLayout(self.select_lay, 1, 0)
-        self.main_lay.addLayout(self.chkBox_lay, 2, 0)
-        self.main_lay.addLayout(self.percent_lay, 3, 3)
-        self.main_lay.addLayout(self.scale_lay, 1, 3)
-        self.main_lay.addLayout(self.position_lay, 2, 3)
-        self.main_lay.addLayout(self.button_lay, 4, 0)
+        self.main_lay.addLayout(self.chkBox_lay, 3, 0)
+        self.main_lay.addLayout(self.percent_lay, 4, 0)
+        self.main_lay.addLayout(self.scale_lay, 5, 0)
+        self.main_lay.addLayout(self.position_lay, 6, 0)
+        self.main_lay.addLayout(self.button_lay, 7, 0)
         self.setLayout(self.main_lay)
 
     def creating_connections(self):
@@ -120,7 +120,7 @@ class ScatterTool(QtWidgets.QDialog):
         self.group_lbl = QtWidgets.QLabel("What percentage of selected"
                                           " vertices will be instanced"
                                           " on?")
-        self.group_header_lbl.setStyleSheet("font: 20px")
+        self.group_lbl.setStyleSheet("font: 20px")
         self.percent_spnbx = QtWidgets.QDoubleSpinBox()
         self.percent_spnbx.setRange(0.01, 1.00)
         self.percent_spnbx.setValue(self.instance.percent_of_verts)
@@ -262,9 +262,7 @@ class ScatterTool(QtWidgets.QDialog):
 
     def _create_button_ui(self):
         self.scatter_btn = QtWidgets.QPushButton("Scatter")
-        #self.update_btn = QtWidgets.QPushButton("Update Selection")
         layout = QtWidgets.QHBoxLayout()
-        #layout.addWidget(self.update_btn)
         layout.addWidget(self.scatter_btn)
         return layout
 
