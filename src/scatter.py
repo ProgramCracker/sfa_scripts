@@ -262,9 +262,9 @@ class ScatterTool(QtWidgets.QDialog):
 
     def _create_button_ui(self):
         self.scatter_btn = QtWidgets.QPushButton("Scatter")
-        self.update_btn = QtWidgets.QPushButton("Update Selection")
+        #self.update_btn = QtWidgets.QPushButton("Update Selection")
         layout = QtWidgets.QHBoxLayout()
-        layout.addWidget(self.update_btn)
+        #layout.addWidget(self.update_btn)
         layout.addWidget(self.scatter_btn)
         return layout
 
@@ -333,11 +333,21 @@ class Instancing(object):
 
     def instance_mesh(self):
         list = self.to_be_instanced
+        vertices = self._get_percentage_of_vertices()
+        sectioned_verts = []
+        i = 0
+        while i < len(vertices):
+            sectioned_verts.append(vertices[i:i+(len(vertices)/
+                                                 (len(list)))])
+            i += (len(vertices)/len(list))
+
+        num = 0
         for shape in list:
             originalSclX = cmds.getAttr(shape+'.scaleX', asString=True)
             originalSclY = cmds.getAttr(shape+'.scaleY', asString=True)
             originalSclZ = cmds.getAttr(shape+'.scaleZ', asString=True)
-            for vert in self._get_percentage_of_vertices():
+
+            for vert in sectioned_verts[num]:
                 pos = cmds.pointPosition(vert)
                 new_instance = cmds.instance(shape)
                 cmds.move(pos[0], pos[1], pos[2], new_instance)
@@ -357,21 +367,26 @@ class Instancing(object):
 
                 cmds.rotate(self.xRot, self.yRot, self.zRot,
                             new_instance)
+            num += 1
 
     def instance_using_normals(self):
         list = self.to_be_instanced
         vertices = self._get_percentage_of_vertices()
+        sectioned_verts = []
+        i = 0
+        while i < len(vertices):
+            sectioned_verts.append(vertices[i:i+(len(vertices)/
+                                                 (len(list)))])
+            i += (len(vertices)/len(list))
+
+        num = 0
         for shape in list:
             originalSclX = cmds.getAttr(shape+'.scaleX', asString=True)
             originalSclY = cmds.getAttr(shape+'.scaleY', asString=True)
             originalSclZ = cmds.getAttr(shape+'.scaleZ', asString=True)
-            print(shape)
 
-            for vert in vertices:
-                #del vertices[0]
-                print(vert)
+            for vert in sectioned_verts[num]:
                 pos = cmds.pointPosition(vert)
-                vertices.remove(vert)
                 new_instance = cmds.instance(shape)
                 cmds.move(pos[0], pos[1], pos[2], new_instance,
                           scalePivotRelative=True,
@@ -395,7 +410,7 @@ class Instancing(object):
 
                 cmds.normalConstraint(vert, new_instance,
                                       aimVector=[0, 1, 0])
-                print (vertices)
+            num += 1
 
     def _get_percentage_of_vertices(self):
         self.target = self.instance_on
